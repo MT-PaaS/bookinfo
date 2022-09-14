@@ -1,0 +1,42 @@
+---
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  annotations:
+    meta.helm.sh/release-name: kiali-operator
+    meta.helm.sh/release-namespace: istio-system
+    ansible.sdk.operatorframework.io/verbosity: "1"
+  finalizers:
+  - kiali.io/finalizer
+  name: kiali
+  namespace: istio-system
+spec:
+  auth:
+    strategy: anonymous
+  deployment:
+    image_name: arti.paas.telekom.hu/quay-remote/kiali/kiali
+    accessible_namespaces:
+    - '**'
+  external_services:
+    prometheus:
+      auth:
+        ca_file: ""
+        insecure_skip_verify: false
+        password: ""
+        token: ""
+        type: "none"
+        use_kiali_token: false
+        username: ""
+      cache_duration: 10
+      cache_enabled: true
+      cache_expiration: 300
+      # default: custom_headers is empty
+      custom_headers:
+        customHeader1: "customHeader1Value"
+      health_check_url: ""
+      is_core: true
+      thanos_proxy:
+        enabled: false
+        retention_period: "7d"
+        scrape_interval: "30s"
+      url: "http://prometheus-kube-prometheus-prometheus.monitoring:9090"
