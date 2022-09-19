@@ -29,7 +29,7 @@ deployment.apps/productpage-v1 created
 k port-forward svc/productpage 9080:9080
 
 ```
-----
+---- PLEASE IGNORE FROM DOWN HERE
 
 ## TODO: Istio:
 
@@ -70,3 +70,13 @@ TODO: Prometheus missing
 $ helm install monitoring prometheus-community/kube-prometheus-stack
 Error: INSTALLATION FAILED: failed pre-install: timed out waiting for the condition
 ```
+Prometheus:
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm search repo kube-prometheus-stack -l
+kubectl create ns monitoring
+helm install monitoring prometheus-community/kube-prometheus-stack
+
+
+k config current-context
+vcluster connect danitop5-student2 --namespace danitop5-student2
