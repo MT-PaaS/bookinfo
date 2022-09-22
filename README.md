@@ -76,11 +76,12 @@ All in action:
 ## User Sandbox login:
 https://k8s-nsxt-sandbox-login.paas.telekom.hu/login
 
-# TU-TOP5 Cluster Creation:
+# TU-TOP5 Creating and Connect to vcluster:
 
 ```bash
+#Clusteradmin:
 vcluster create --namespace tutop5 --connect=false tutop5 -f values.yaml
-
+#grant NS admin access
 $ cat tutop5nsadmin.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -102,12 +103,15 @@ rolebinding.rbac.authorization.k8s.io/tutop5-edit created
 
 
 
-#@user:
+#@user side:
+```bash
 $ cat vcluster.yaml
 vcluster:
   image: rancher/k3s:v1.23.5-k3s1
 
 defaultImageRegistry: arti.paas.telekom.hu/docker-remote/
+```
+```bash
 vcluster connect tutop5 --namespace tutop5
 
 helm upgrade --install hegedus1dan128 vcluster \
@@ -115,7 +119,7 @@ helm upgrade --install hegedus1dan128 vcluster \
   --repo https://charts.loft.sh \
   --namespace tutop5 \
   --repository-config=''
-
+```
 ### App install:
 Bookinfo Application architecture:
 
@@ -123,10 +127,15 @@ Bookinfo Application architecture:
 ```bash
 hegedus1dan128@TWN576961 ~/git/bookinfo
 $ git clone git@github.com:MT-PaaS/bookinfo.git
+
+#doublecheck if you are in the right Context:
+$ k config current-context
+
 #Apply manifest into right NS
 hegedus1dan128@TWN576961 ~/git/bookinfo
 
-$ k apply -f bookinfo.yaml -n dani-bookinfo
+$ k apply -f bookinfo.yaml
+
 service/details created
 serviceaccount/bookinfo-details created
 deployment.apps/details-v1 created
@@ -142,7 +151,7 @@ service/productpage created
 serviceaccount/bookinfo-productpage created
 deployment.apps/productpage-v1 created
 #
-#
+#Connect to "Frontend" of our microservices
 k port-forward svc/productpage 9080:9080
 
 ```
